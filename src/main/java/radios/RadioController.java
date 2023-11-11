@@ -14,7 +14,7 @@ public class RadioController {
 	private final AtomicLong counter = new AtomicLong();
 
 	@PostMapping("/receiveiq")
-	public void receiveIQ(@RequestParam(value = "name", defaultValue = "default") String name) {
+	public void receiveIQ(@RequestParam String name) {
         System.out.print(name);
 		// return new Greeting(counter.incrementAndGet(), String.format(template, name));
 	}
