@@ -1,2 +1,5 @@
 mvn clean install
 mvn spring-boot:run
+
+
+- from wsl: curl -X POST <ip>:8080/receiveiq
