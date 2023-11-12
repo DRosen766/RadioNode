@@ -61,7 +61,7 @@ im_gen = imagedata_gen(image_width, image_height, fft_size, overlap)
 
 
 # Init http
-ip_addr = "http://127.0.0.1:5000"
+ip_addr = "18.225.195.209:5000"
 label_map = {"['2-ASK', ['ask', 2]]" : 0,
              "['4-ASK', ['ask', 4]]" : 1,
              "['8-ASK', ['ask', 8]]" : 2,
