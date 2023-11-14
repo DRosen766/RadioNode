@@ -16,8 +16,8 @@ from cloudd_rf.metadata_gen import metadata_gen
 from cloudd_rf.imagedata_gen import imagedata_gen
 # Dataset Parameters
 rand_seed = 10                                            # Seed for the random number generator for repeatability (note: script must use all of the same generation parameter bounds and values).
-num_training_examples = 4                                     # Number of different radio frequency spectrum examples to be created for the dataset.
-num_testing_examples = 1                                      # Number of different radio frequency spectrum examples to be created for the dataset.
+num_training_examples = 4000                                     # Number of different radio frequency spectrum examples to be created for the dataset.
+num_testing_examples = 1000                                      # Number of different radio frequency spectrum examples to be created for the dataset.
 max_sigs = 1
 # Spectrum Parameters
 obs_int = 1024                                              # Observation length of the spectrum for each example.
