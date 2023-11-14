@@ -16,8 +16,8 @@ from cloudd_rf.metadata_gen import metadata_gen
 from cloudd_rf.imagedata_gen import imagedata_gen
 # Dataset Parameters
 rand_seed = 10                                            # Seed for the random number generator for repeatability (note: script must use all of the same generation parameter bounds and values).
-num_training_examples = 120                                     # Number of different radio frequency spectrum examples to be created for the dataset.
-num_testing_examples = 30                                      # Number of different radio frequency spectrum examples to be created for the dataset.
+num_training_examples = 4                                     # Number of different radio frequency spectrum examples to be created for the dataset.
+num_testing_examples = 1                                      # Number of different radio frequency spectrum examples to be created for the dataset.
 max_sigs = 1
 # Spectrum Parameters
 obs_int = 1024                                              # Observation length of the spectrum for each example.
@@ -48,7 +48,7 @@ fft_size = 256                                              # FFT size used to g
 overlap = 255                                               # FFT overlap used to generate the spectrogram image.
 
 # Initialize Metadata File
-metadata_file_name = 'data/metadata.csv'
+metadata_file_name = 'metadata.csv'
 # fid = open(metadata_file_name, 'w', encoding='UTF8', newline='')
 # writer = csv.writer(fid)
 # header = ['file_name', 'Center Frequency', 'Bandwidth', 'Start Time (samples)', 'Stop Time (samples)', 'SNR', 'Signal Type']
@@ -60,11 +60,26 @@ rng = np.random.default_rng(rand_seed)
 meta_gen = metadata_gen(obs_int, rng)
 iq_gen = iqdata_gen(obs_int, rng)
 im_gen = imagedata_gen(image_width, image_height, fft_size, overlap)
-
+label_map = {"['2-ASK', ['ask', 2]]" : 0,
+             "['4-ASK', ['ask', 4]]" : 1,
+             "['8-ASK', ['ask', 8]]" : 2,
+             "['BPSK', ['psk', 2]]" : 3, 
+             "['QPSK', ['psk', 4]]" : 4,
+             "['8-PSK', ['psk', 8]]" : 5,
+             "['16-QAM', ['qam', 16]]" : 6,
+             "['64-QAM', ['qam', 64]]" : 7,
+             "['Constant Tone', ['constant']]" : 8,
+             "['P-FMCW', ['p_fmcw']]" : 9,
+             "['N-FMCW', ['n_fmcw']]" : 10}
 
 # Init http
 # ip_addr = "18.191.171.241:5000"
 ip_addr = "http://127.0.0.1:5000"
+metadata_file_name = 'metadata.csv'
+fid = open(metadata_file_name, 'w', encoding='UTF8', newline='')
+writer = csv.writer(fid)
+
+
 
 training_examples = []
 training_sig_types = []
@@ -84,8 +99,18 @@ for k in tqdm(range(num_training_examples + num_testing_examples)):
     
     radioConnection.put("{}{}".format(ip_addr, "/send_iq"), params={"k":k}, data=bytearray(iq_data))
 
+    iqdata_file_name = 'server_data/iqdata/example_' + str(k+1) + '.dat'
+    for metadata in burst_metadata:
+        # extract and send params
+        params = {"metadata_file_name" : metadata_file_name,
+                "iqdata_file_name":iqdata_file_name, 
+                  "cent_freq" : metadata.cent_freq, 
+                  "bandwidth" : metadata.bandwidth, 
+                  "snr" : metadata.snr, 
+                  "sig_type" : metadata.sig_type}
+        radioConnection.put("{}{}".format(ip_addr, "/send_metadata"), params= params)
 
-
-
+# after all metadata has been created, load it to s3 with endpoint
+radioConnection.post("{}{}".format(ip_addr, "/upload_metadata"), params= {"metadata_file_name":metadata_file_name})
 
 
