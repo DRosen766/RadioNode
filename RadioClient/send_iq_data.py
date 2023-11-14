@@ -16,8 +16,8 @@ from cloudd_rf.metadata_gen import metadata_gen
 from cloudd_rf.imagedata_gen import imagedata_gen
 # Dataset Parameters
 rand_seed = 10                                            # Seed for the random number generator for repeatability (note: script must use all of the same generation parameter bounds and values).
-num_training_examples = 4000                                     # Number of different radio frequency spectrum examples to be created for the dataset.
-num_testing_examples = 1000                                      # Number of different radio frequency spectrum examples to be created for the dataset.
+num_training_examples = 100                                     # Number of different radio frequency spectrum examples to be created for the dataset.
+num_testing_examples = 20                                      # Number of different radio frequency spectrum examples to be created for the dataset.
 max_sigs = 1
 # Spectrum Parameters
 obs_int = 1024                                              # Observation length of the spectrum for each example.
@@ -96,10 +96,9 @@ for k in tqdm(range(num_training_examples + num_testing_examples)):
     iq_data, burst_metadata = iq_gen.gen_iq(burst_metadata)
     iq_data_clone = np.copy(iq_data)
     iq_data = np.concatenate((np.real(iq_data),np.imag(iq_data_clone)))
-    
-    radioConnection.put("{}{}".format(ip_addr, "/send_iq"), params={"k":k}, data=bytearray(iq_data))
+    iqdata_file_name = 'server_data/iqdata/example_' + str(k) + '.dat'
+    radioConnection.put("{}{}".format(ip_addr, "/send_iq"), params={"k":k, "iqdata_file_name":iqdata_file_name}, data=bytearray(iq_data))
 
-    iqdata_file_name = 'server_data/iqdata/example_' + str(k+1) + '.dat'
     for metadata in burst_metadata:
         # extract and send params
         params = {"metadata_file_name" : metadata_file_name,

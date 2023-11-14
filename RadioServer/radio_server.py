@@ -12,13 +12,13 @@ iq_data_sample = []
 @app.put("/send_iq")
 def send_iq():
     k = int(request.args.get("k"))
+    iqdata_file_name = str(request.args.get("iqdata_file_name"))
 
     # extract iq data from request
     iq_data = request.get_data()
     iq_data = np.array(array.array('f', iq_data))
 
     # move iq_data to file
-    iqdata_file_name = 'server_data/iqdata/example_' + str(k+1) + '.dat'
     iq_data.tofile(iqdata_file_name)
 
     # upload file to s3 bucket
@@ -46,5 +46,5 @@ def send_metadata():
 @app.post("/upload_metadata")
 def upload_metadata():
     metadata_file_name = str(request.args.get("metadata_file_name"))
-    boto3.resource('s3').Bucket('radio-bucket-766318').upload_file(metadata_file_name, "server_data/{}".format(metadata_file_name))
+    boto3.resource('s3').Bucket('radio-bucket-766318').upload_file("./RadioServer/{}".format(metadata_file_name), "server_data/{}".format(metadata_file_name))
     return "created {}".format(metadata_file_name)
