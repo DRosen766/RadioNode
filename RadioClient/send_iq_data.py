@@ -1,3 +1,5 @@
+# Generate and Send IQ Data to Radio Server
+
 from http import client
 import requests
 import csv
@@ -61,18 +63,8 @@ im_gen = imagedata_gen(image_width, image_height, fft_size, overlap)
 
 
 # Init http
-ip_addr = "18.225.195.209:5000"
-label_map = {"['2-ASK', ['ask', 2]]" : 0,
-             "['4-ASK', ['ask', 4]]" : 1,
-             "['8-ASK', ['ask', 8]]" : 2,
-             "['BPSK', ['psk', 2]]" : 3, 
-             "['QPSK', ['psk', 4]]" : 4,
-             "['8-PSK', ['psk', 8]]" : 5,
-             "['16-QAM', ['qam', 16]]" : 6,
-             "['64-QAM', ['qam', 64]]" : 7,
-             "['Constant Tone', ['constant']]" : 8,
-             "['P-FMCW', ['p_fmcw']]" : 9,
-             "['N-FMCW', ['n_fmcw']]" : 10}
+# ip_addr = "18.191.171.241:5000"
+ip_addr = "http://127.0.0.1:5000"
 
 training_examples = []
 training_sig_types = []
@@ -89,14 +81,8 @@ for k in tqdm(range(num_training_examples + num_testing_examples)):
     iq_data, burst_metadata = iq_gen.gen_iq(burst_metadata)
     iq_data_clone = np.copy(iq_data)
     iq_data = np.concatenate((np.real(iq_data),np.imag(iq_data_clone)))
+    
     radioConnection.put("{}{}".format(ip_addr, "/send_iq"), params={"k":k}, data=bytearray(iq_data))
-    break
-    # send iq data
-    # radioConnection = client.("{}:5000".format(ip_addr))
-    # for iq_data_point in iq_data:
-    #     response = radioConnection.put("{}{}".format(ip_addr, "/append_iq"), data=(str(iq_data_point)))
-    # radioConnection.post("{}{}".format(ip_addr, "/complete_iq_sample"), params={"k":k})
-    # radioConnection.close()
 
 
 
