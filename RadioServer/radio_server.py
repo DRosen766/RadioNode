@@ -1,6 +1,7 @@
 from flask import Flask, request
 from werkzeug.utils import secure_filename
 import boto3
+from sagemaker.estimator import Estimator
 import array
 import numpy as np
 import csv
@@ -48,3 +49,7 @@ def upload_metadata():
     metadata_file_name = str(request.args.get("metadata_file_name"))
     boto3.resource('s3').Bucket('radio-bucket-766318').upload_file("./RadioServer/{}".format(metadata_file_name), "server_data/{}".format(metadata_file_name))
     return "created {}".format(metadata_file_name)
+
+@app.post("/train_model")
+def train_model():
+    pass

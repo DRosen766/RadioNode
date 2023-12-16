@@ -1,0 +1,1 @@
+python pubsub.py --topic "test/topic" --ca_file "$env:USERPROFILE\certs\AmazonRootCA1.pem" --cert "$env:USERPROFILE\certs\d7eb4b5b9767e3879349d2b5bd79a276e119d606e2cd2fb670cd26c0c2c655e4-certificate.pem.crt" --key "$env:USERPROFILE\certs\d7eb4b5b9767e3879349d2b5bd79a276e119d606e2cd2fb670cd26c0c2c655e4-private.pem.key" --endpoint "a1pxdv1mforzpw-ats.iot.us-east-2.amazonaws.com"

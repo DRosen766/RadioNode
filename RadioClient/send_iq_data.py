@@ -10,14 +10,16 @@ import torch
 from torch import Tensor
 from tqdm import tqdm
 import pandas as pd
+
+
 # Datagen Imports
 from cloudd_rf.iqdata_gen import iqdata_gen
 from cloudd_rf.metadata_gen import metadata_gen
 from cloudd_rf.imagedata_gen import imagedata_gen
 # Dataset Parameters
 rand_seed = 10                                            # Seed for the random number generator for repeatability (note: script must use all of the same generation parameter bounds and values).
-num_training_examples = 100                                     # Number of different radio frequency spectrum examples to be created for the dataset.
-num_testing_examples = 20                                      # Number of different radio frequency spectrum examples to be created for the dataset.
+num_training_examples = 50                                     # Number of different radio frequency spectrum examples to be created for the dataset.
+num_testing_examples = 10                                      # Number of different radio frequency spectrum examples to be created for the dataset.
 max_sigs = 1
 # Spectrum Parameters
 obs_int = 1024                                              # Observation length of the spectrum for each example.
@@ -106,7 +108,7 @@ for k in tqdm(range(num_training_examples + num_testing_examples)):
                   "cent_freq" : metadata.cent_freq, 
                   "bandwidth" : metadata.bandwidth, 
                   "snr" : metadata.snr, 
-                  "sig_type" : metadata.sig_type}
+                  "sig_type" : str(metadata.sig_type)}
         radioConnection.put("{}{}".format(ip_addr, "/send_metadata"), params= params)
 
 # after all metadata has been created, load it to s3 with endpoint
