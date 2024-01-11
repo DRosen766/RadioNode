@@ -44,7 +44,7 @@ if __name__ == '__main__':
     #     else:
     #         print("Sending {} message(s)".format(message_count))
 
-    message = f"iq_data: [{np.ones(1024)}]"
+    message = {"iq_data": list(np.ones(1024))}
     print("Publishing message to topic '{}': {}".format(message_topic, message))
     message_json = json.dumps(message)
     mqtt_connection.publish(
