@@ -38,7 +38,9 @@ out/
 
 # data files
 Model/tests/train_data/*
+Model/tests/test_data/*
 Model/tests/label_map.json
+Model/tests/saved_model
 
 # certifications
 RadioClient/certs/*

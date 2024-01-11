@@ -86,7 +86,7 @@ for k in tqdm(range(num_training_examples)):
                   "bandwidth" : metadata.bandwidth, 
                   "snr" : metadata.snr, 
                   "sig_type" : str(metadata.sig_type)}
-        writer.writerow(list(metadata_info.values()))
+        writer.writerow(list(metadata_info.values())[1:])
 
 # write metadata file to bucket
 bucket.upload_file(f"train_data/{metadata_file_name}", f"train/{metadata_file_name}")
