@@ -10,12 +10,12 @@ import os
 import numpy as np
 if __name__ == '__main__':
 # create and format values for HTTPS request
-    topic = "iq_data"
+    topic = os.environ["TOPIC"]
     mqtt_connection = mqtt_connection_builder.mtls_from_path(
-        endpoint=os.environ["AWS_IOT_ENDPOINT"],
-        cert_filepath=os.environ["AWS_IOT_CERT"],
-        pri_key_filepath=os.environ["AWS_IOT_KEY"],
-        ca_filepath=os.environ["AWS_IOT_CA_FILE"],
+        endpoint=os.environ['AWS_IOT_ENDPOINT'],
+        cert_filepath=f"certs/{os.environ['AWS_IOT_CERT']}",
+        pri_key_filepath=f"certs/{os.environ['AWS_IOT_KEY']}",
+        ca_filepath=f"certs/{os.environ['AWS_IOT_CA_FILE']}",
         client_id="danny_rosen")
     connect_future = mqtt_connection.connect()
 
@@ -44,7 +44,7 @@ if __name__ == '__main__':
     #     else:
     #         print("Sending {} message(s)".format(message_count))
 
-    message = f"iq_data: [{np.ones(5)}]"
+    message = f"iq_data: [{np.ones(1024)}]"
     print("Publishing message to topic '{}': {}".format(message_topic, message))
     message_json = json.dumps(message)
     mqtt_connection.publish(

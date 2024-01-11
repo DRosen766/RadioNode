@@ -38,3 +38,7 @@ out/
 
 # data files
 server_data/iqdata/*
+
+# certifications
+
+RadioClient/certs/*
