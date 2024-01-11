@@ -14,7 +14,7 @@ from cloudd_rf.imagedata_gen import imagedata_gen
 
 # Dataset Parameters
 rand_seed = 10                                            # Seed for the random number generator for repeatability (note: script must use all of the same generation parameter bounds and values).
-num_training_examples = 1000                                     # Number of different radio frequency spectrum examples to be created for the dataset.
+num_testing_examples = 200                                     # Number of different radio frequency spectrum examples to be created for the dataset.
 max_sigs = 1
 
 # Spectrum Parameters
@@ -46,8 +46,8 @@ fft_size = 256                                              # FFT size used to g
 overlap = 255                                               # FFT overlap used to generate the spectrogram image.
 
 # Initialize Metadata File
-metadata_file_name = 'train_metadata.csv'
-fid = open(f"train_data/{metadata_file_name}", 'w', encoding='UTF8', newline='')
+metadata_file_name = 'test_metadata.csv'
+fid = open(f"test_data/{metadata_file_name}", 'w', encoding='UTF8', newline='')
 writer = csv.writer(fid)
 # header = ['file_name', 'Center Frequency', 'Bandwidth', 'Start Time (samples)', 'Stop Time (samples)', 'SNR', 'Signal Type']
 # writer.writerow(header)
@@ -63,8 +63,8 @@ bucket = boto3.resource("s3").Bucket("test-radio-bucket-766318")
 bucket.download_file("label_map.json", "label_map.json")
 label_map = json.load(open("label_map.json"))
 
-# iterate through number of training examples
-for k in tqdm(range(num_training_examples)):
+# iterate through number of testing examples
+for k in tqdm(range(num_testing_examples)):
     
     # create metadata
     burst_metadata = meta_gen.gen_metadata(max_sigs, max_trials, bandwidth_bounds, cent_freq_bounds, start_bounds, duration_bounds, snr_bounds, sig_types, allow_collisions)
@@ -73,10 +73,10 @@ for k in tqdm(range(num_training_examples)):
     iq_data_clone = np.copy(iq_data)
     iq_data = np.concatenate((np.real(iq_data),np.imag(iq_data_clone)))
     iqdata_file_name = 'example_' + str(k) + '.dat'
-    iq_data.tofile(f"train_data/iqdata/temp_{iqdata_file_name}")
-    bucket.upload_file(f"train_data/iqdata/temp_{iqdata_file_name}", f"train/iqdata/{iqdata_file_name}")
+    iq_data.tofile(f"test_data/iqdata/temp_{iqdata_file_name}")
+    bucket.upload_file(f"test_data/iqdata/temp_{iqdata_file_name}", f"test/iqdata/{iqdata_file_name}")
     # delete local iqdata file
-    os.remove(f"train_data/iqdata/temp_{iqdata_file_name}")
+    os.remove(f"test_data/iqdata/temp_{iqdata_file_name}")
 
     for metadata in burst_metadata:
         # extract and send params
@@ -89,7 +89,7 @@ for k in tqdm(range(num_training_examples)):
         writer.writerow(list(metadata_info.values()))
 
 # write metadata file to bucket
-bucket.upload_file(f"train_data/{metadata_file_name}", f"train/{metadata_file_name}")
+bucket.upload_file(f"test_data/{metadata_file_name}", f"test/{metadata_file_name}")
 
 
 
