@@ -37,8 +37,8 @@ out/
 .vscode/
 
 # data files
-server_data/iqdata/*
+Model/tests/train_data/*
+Model/tests/label_map.json
 
 # certifications
-
 RadioClient/certs/*
