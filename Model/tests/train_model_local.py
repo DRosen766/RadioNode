@@ -15,7 +15,7 @@ from torch.utils.data import TensorDataset, DataLoader
 from torch import Tensor
 from tqdm import tqdm
 from threading import Thread
-from  test_model import Net
+from  Model.tests.example_model import Net
 import boto3
 import json
 # mp.set_start_method('fork', force=True )
