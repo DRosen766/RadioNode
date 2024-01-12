@@ -11,10 +11,20 @@ RUN python3 -m pip install pandas
 RUN python3 -m pip install matplotlib
 RUN python3 -m pip install numpy
 RUN python3 -m pip install tqdm
+RUN python3 -m pip install scikit-learn
+RUN python3 -m pip install seaborn
+RUN python3 -m pip install torchvision
+RUN python3 -m pip install boto3
 RUN python3 -m pip install --default-timeout=900 torch
 
 # copy the training script inside the container
-COPY train_test.py /opt/ml/code/train_test.py
-
-# define train.py as the script entry point
-ENV SAGEMAKER_PROGRAM train_test.py
+COPY /opt/ml/code/model.py /opt/ml/code/model.py
+COPY /opt/ml/code/sandbox.py /opt/ml/code/sandbox.py
+COPY /opt/ml/code/train_model.py /opt/ml/code/train_model.py
+WORKDIR /opt/ml/
+RUN mkdir train_data
+RUN mkdir train_data/iqdata
+RUN mkdir test_data
+RUN mkdir test_data/iqdata
+# define train_model.py as the script entry point
+ENV SAGEMAKER_PROGRAM  /opt/ml/code/train_model.py
