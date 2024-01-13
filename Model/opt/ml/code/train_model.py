@@ -45,6 +45,7 @@ label_map = {"['2-ASK', ['ask', 2]]" : 0,
 
 # access /opt/ml/directory
 true_path = lambda path : realpath(join("..", normpath(path)))
+
 # connect to bucket
 bucket = boto3.resource("s3").Bucket(os.environ["SM_TRAINING_DATA_BUCKET"])
 bucket.download_file("label_map.json", true_path("label_map.json"))
@@ -55,7 +56,7 @@ reader = csv.reader(metadata_file)
 reader = list(reader)
 
 # datasets
-train_num = 1000
+train_num = 100
 training_examples = []
 training_labels = []
 
@@ -86,7 +87,7 @@ while True and iteration < 1:
     batch_size_test = [16]
     learning_rate = [0.001]
     weight_decay = [1e-3]
-    epochs = [10]
+    epochs = [2]
     
 
     training_examples = Tensor(np.array(training_examples))

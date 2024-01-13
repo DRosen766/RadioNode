@@ -27,7 +27,7 @@ RUN mkdir train_data
 RUN mkdir train_data/iqdata
 RUN mkdir test_data
 RUN mkdir test_data/iqdata
-WORKDIR /opt/ml/
+WORKDIR /opt/ml/code/
 # define train_model.py as the script entry point
 ENV SAGEMAKER_PROGRAM  /opt/ml/code/train_model.py
 

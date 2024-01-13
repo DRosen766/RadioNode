@@ -41,6 +41,7 @@ out/
 *.csv
 label_map.json
 saved_model
-
+test_bucket_name.txt
+*.tar.gz
 # certifications
 RadioClient/certs/*
