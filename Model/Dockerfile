@@ -17,14 +17,18 @@ RUN python3 -m pip install torchvision
 RUN python3 -m pip install boto3
 RUN python3 -m pip install --default-timeout=900 torch
 
+
 # copy the training script inside the container
 COPY /opt/ml/code/model.py /opt/ml/code/model.py
-COPY /opt/ml/code/sandbox.py /opt/ml/code/sandbox.py
+# COPY /opt/ml/code/sandbox.py /opt/ml/code/sandbox.py
 COPY /opt/ml/code/train_model.py /opt/ml/code/train_model.py
 WORKDIR /opt/ml/
 RUN mkdir train_data
 RUN mkdir train_data/iqdata
 RUN mkdir test_data
 RUN mkdir test_data/iqdata
+WORKDIR /opt/ml/
 # define train_model.py as the script entry point
 ENV SAGEMAKER_PROGRAM  /opt/ml/code/train_model.py
+
+ENV SM_TRAINING_DATA_BUCKET test-radio-bucket-766318

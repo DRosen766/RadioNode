@@ -19,6 +19,7 @@ from  model import Net
 import boto3
 import json
 from os.path import normpath, join, realpath
+import os
 # mp.set_start_method('fork', force=True )
 
 # transforms
@@ -42,13 +43,14 @@ label_map = {"['2-ASK', ['ask', 2]]" : 0,
              "['P-FMCW', ['p_fmcw']]" : 9,
              "['N-FMCW', ['n_fmcw']]" : 10}
 
-true_path = lambda path : join(realpath(__file__), normpath("../"), normpath(path))
+# access /opt/ml/directory
+true_path = lambda path : realpath(join("..", normpath(path)))
 # connect to bucket
-bucket = boto3.resource("s3").Bucket("test-radio-bucket-766318")
-bucket.download_file("label_map.json", true_path("../label_map.json"))
-label_map = json.load(open(true_path("../label_map.json")))
-bucket.download_file("train/train_metadata.csv", true_path("../train_data/train_metadata.csv"))
-metadata_file = open(true_path("../train_data/train_metadata.csv"))
+bucket = boto3.resource("s3").Bucket(os.environ["SM_TRAINING_DATA_BUCKET"])
+bucket.download_file("label_map.json", true_path("label_map.json"))
+label_map = json.load(open(true_path("label_map.json")))
+bucket.download_file("train/train_metadata.csv", true_path("train_data/train_metadata.csv"))
+metadata_file = open(true_path("train_data/train_metadata.csv"))
 reader = csv.reader(metadata_file)
 reader = list(reader)
 
@@ -63,8 +65,8 @@ def load_data(num_threads, thread_num, test_data=True, reader=reader):
     for line in tqdm(reader):
         data_file_name, snr, label = line[0], line[-2], line[-1]
         # download from file and load to array
-        bucket.download_file(f"train/iqdata/{data_file_name}", true_path(f"../train_data/iqdata/{data_file_name}"))
-        iq_data = np.fromfile(true_path(f"../train_data/iqdata/{data_file_name}"))
+        bucket.download_file(f"train/iqdata/{data_file_name}", true_path(f"train_data/iqdata/{data_file_name}"))
+        iq_data = np.fromfile(true_path(f"train_data/iqdata/{data_file_name}"))
         # stack array
         iq_data = np.vstack(([[iq_data[:1024]]], [[iq_data[1024:]]]))
         # add to dataset
@@ -116,7 +118,7 @@ while True and iteration < 1:
         # plt.savefig("output_plot_{}.png".format(iteration))
         plt.close()
 
-    torch.save(net.state_dict(), "saved_model")
+    torch.save(net.state_dict(), true_path("saved_model"))
     exit()
 
 
