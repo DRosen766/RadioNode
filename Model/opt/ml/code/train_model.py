@@ -128,7 +128,7 @@ if __name__ == "__main__":
             plt.close()
 
         torch.save(net.state_dict(), true_path("saved_model"))
-
+        iteration += 1
     exit()
 
     # iterate over test data

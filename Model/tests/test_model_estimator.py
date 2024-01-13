@@ -6,4 +6,4 @@ estimator = Estimator(image_uri="model_container", role="AWSServiceRoleForAmazon
 # param defines SM_CHANNEL_TRAINING
 estimator.fit({"training":f"s3://{test_bucket_name}/test/test_metadata.csv"})
 
-predictor = estimator.deploy(initial_instance_count=1, instance_type="local")
+predictor = estimator.deploy(instance_type='local', initial_instance_count=1)
