@@ -4,6 +4,7 @@ RUN apt-get update
 RUN apt-get install -y python3
 RUN apt-get install -y python3-pip
 RUN apt-get install -y nginx
+RUN apt-get install -y curl
 
 # install the SageMaker Training Toolkit 
 RUN python3 -m pip install sagemaker-training

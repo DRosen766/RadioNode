@@ -1,4 +1,5 @@
 from sagemaker.estimator import Estimator
+# from sagemaker.local.entities
 import boto3
 test_bucket_name = open("test_bucket_name.txt", "r").read()
 s3_output_location=f's3://{test_bucket_name}/saved_model'
@@ -6,4 +7,4 @@ estimator = Estimator(image_uri="model_container", role="AWSServiceRoleForAmazon
 # param defines SM_CHANNEL_TRAINING
 estimator.fit({"training":f"s3://{test_bucket_name}/test/test_metadata.csv"})
 
-predictor = estimator.deploy(instance_type='local', initial_instance_count=1)
+predictor = estimator.deploy(instance_type='t2.micro', initial_instance_count=1)

@@ -28,4 +28,4 @@
 ## Containerizing Model
 - from `Model/` run `docker build -t model_container .` 
 - - NOTE: Ensure docker daemon is running
-- to run: `docker run --mount src=$env:USERPROFILE/.aws,target="/root/.aws",type=bind -it model_container`
+- to run: `docker run -p 127.0.0.1:5000:5000 --mount src=$env:USERPROFILE/.aws,target="/root/.aws",type=bind -it model_container`

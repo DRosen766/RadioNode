@@ -4,8 +4,8 @@ import json
 import os
 ip_addr = "localhost"
 params = urllib.parse.urlencode({"word" : [1,2,3]})
-print(params)
+# print(params)
 # foo = {'word': 'Hello HTTP #1 **cool**, and #1!'}
 # json_data = json.dumps(foo)
-radioConnection = client.HTTPConnection("{}:5000".format(ip_addr))
-radioConnection.request("POST", "/invocations?{}".format(params), body="asdf")
+radioConnection = client.HTTPConnection("{}:8080".format(ip_addr))
+radioConnection.request("GET", "/ping", body="asdf")

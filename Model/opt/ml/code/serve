@@ -1,2 +1,2 @@
 #!/bin/bash
-flask --app opt/ml/code/predictor_server run
+flask --app opt/ml/code/predictor_server run -p 8080
